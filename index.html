@@ -1,0 +1,2095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conditionals Studio — Practice Zero, First, Second &amp; Third Conditionals</title>
+<link rel="icon" type="image/png" href="favicon.png">
+  <!-- Google Fonts: Fraunces (Editorial Serif), Plus Jakarta Sans (Clean UI), JetBrains Mono (Formulas & Scores) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper: '#F7F6F2',
+            surface: '#FFFFFF',
+            ink: '#1F2328',
+            muted: '#636B75',
+            line: '#E6E4DD',
+            // Subtle editorial accents for the 4 conditional types
+            zero: { DEFAULT: '#0F766E', soft: '#F0FDFA', border: '#CCFBF1' },
+            first: { DEFAULT: '#4338CA', soft: '#EEF2FF', border: '#E0E7FF' },
+            second: { DEFAULT: '#C2410C', soft: '#FFF7ED', border: '#FFEDD5' },
+            third: { DEFAULT: '#9F1239', soft: '#FFF1F2', border: '#FFE4E6' },
+          },
+          fontFamily: {
+            serif: ['"Fraunces"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          boxShadow: {
+            editorial: '0 1px 2px rgba(31, 35, 40, 0.04), 0 8px 24px -12px rgba(31, 35, 40, 0.08)',
+            chip: '0 1px 2px rgba(31, 35, 40, 0.06)',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    body {
+      background-color: #F7F6F2;
+      color: #1F2328;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes chipIn {
+      from { opacity: 0; transform: scale(0.93) translateY(3px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes gentleShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-5px); }
+      40% { transform: translateX(5px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+
+    .animate-fade-up {
+      animation: fadeSlideUp 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .animate-chip-in {
+      animation: chipIn 0.16s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .animate-shake {
+      animation: gentleShake 0.34s ease-in-out;
+    }
+
+    /* Inline gap input styling for Exercises 4 & 5 */
+    .gap-input {
+      display: inline-block;
+      background-color: #F7F6F2;
+      border: 1.5px solid #D5D2C8;
+      border-radius: 0.625rem;
+      padding: 0.28rem 0.65rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.94rem;
+      font-weight: 500;
+      color: #1F2328;
+      outline: none;
+      transition: border-color 0.18s, background-color 0.18s, box-shadow 0.18s;
+      width: 150px;
+      max-width: 100%;
+    }
+
+    .gap-input:focus {
+      border-color: #1F2328;
+      background-color: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(31, 35, 40, 0.08);
+    }
+
+    .gap-input.state-correct {
+      border-color: #059669;
+      background-color: #ECFDF5;
+      color: #065F46;
+    }
+
+    .gap-input.state-wrong {
+      border-color: #E11D48;
+      background-color: #FFF1F2;
+      color: #9F1239;
+    }
+
+    /* Hide scrollbar on horizontal tab strip while allowing smooth touch scrolling */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #D6D3C9; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #B9B5A8; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-ink selection:text-paper">
+
+  <!-- ==================== STICKY EDITORIAL HEADER ==================== -->
+  <header class="sticky top-0 z-30 bg-paper/95 backdrop-blur-md border-b border-line">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-ink text-paper flex items-center justify-center font-serif font-semibold text-lg tracking-tight shrink-0">
+          If
+        </div>
+        <div>
+          <h1 class="font-serif font-semibold text-lg sm:text-xl leading-tight text-ink">
+            Conditionals Studio
+          </h1>
+          <p class="text-xs text-muted">
+            Zero, First, Second &amp; Third Conditionals
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Controls: Student Name + Grammar Guide -->
+      <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto justify-end">
+        <div class="relative flex-1 sm:flex-initial">
+          <label for="studentNameInput" class="sr-only">Your Name</label>
+          <input
+            id="studentNameInput"
+            type="text"
+            placeholder="Your Name"
+            autocomplete="name"
+            class="w-full sm:w-52 px-3.5 py-2 rounded-xl bg-surface border border-line text-sm text-ink placeholder:text-muted/70 focus:outline-none focus:border-ink transition-all shadow-chip"
+          />
+        </div>
+
+        <button id="openGuideBtn" type="button"
+          class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface border border-line text-sm font-medium text-ink hover:border-ink/40 hover:bg-paper transition-all shadow-chip shrink-0">
+          <svg class="w-4 h-4 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+          </svg>
+          <span>Grammar Guide</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Inline Name Prompt Banner (shown if student clicks Send to Teacher without entering a name) -->
+    <div id="nameRequiredBanner" class="hidden border-t border-third-border bg-third-soft">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between gap-3 text-xs sm:text-sm text-third font-medium">
+        <span>Please enter your name in the "Your Name" box above before sending your results.</span>
+        <button id="dismissNameBannerBtn" type="button" class="text-third/70 hover:text-third px-1.5 text-base leading-none" aria-label="Dismiss">&times;</button>
+      </div>
+    </div>
+
+    <!-- Sticky Horizontal 5-Exercise Tab Bar with Progress / Score Badges -->
+    <nav class="border-t border-line bg-surface/90" aria-label="Exercises">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6">
+        <div id="exerciseTabStrip" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-2">
+          <!-- Tabs rendered by JS -->
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ==================== MAIN WORKSPACE ==================== -->
+  <main class="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-9">
+
+    <!-- =========================================================
+         EXERCISE 1: COMPLETE THE CLAUSE (INTERACTIVE WORD BUILDER)
+         ========================================================= -->
+    <section id="panel-ex1" class="exercise-panel space-y-5 animate-fade-up">
+      <div class="space-y-1">
+        <span class="font-mono text-xs uppercase tracking-wider text-muted">Exercise 1 · 12 Sentences</span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-medium text-ink">Complete the Clause</h2>
+        <p class="text-sm text-muted">Click the word tiles in order to build the missing part of each sentence. Ignore the extra distractor words.</p>
+      </div>
+
+      <!-- Active Card Workspace -->
+      <div id="ex1ActiveArea" class="space-y-4">
+        <!-- Progress Header -->
+        <div class="flex items-center justify-between text-xs sm:text-sm font-mono">
+          <div class="flex items-center gap-2.5">
+            <span id="ex1ProgressLabel" class="text-ink font-semibold">1 of 12</span>
+            <span id="ex1PracticeBadge" class="hidden px-2 py-0.5 rounded-md bg-second-soft border border-second-border text-second text-[11px]">Practice Mistakes</span>
+          </div>
+          <span id="ex1ScoreLive" class="text-muted">Score: 0</span>
+        </div>
+        <div class="w-full h-1.5 bg-line rounded-full overflow-hidden">
+          <div id="ex1ProgressFill" class="h-full bg-ink rounded-full transition-all duration-300" style="width: 0%;"></div>
+        </div>
+
+        <!-- Question Card -->
+        <div id="ex1Card" class="bg-surface border border-line rounded-2xl shadow-editorial p-5 sm:p-8 space-y-6">
+          <!-- Context Row -->
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="font-mono text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-md bg-paper border border-line text-muted">
+                Situation
+              </span>
+              <span id="ex1ContextLabel" class="font-serif text-base sm:text-lg text-ink"></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="ex1ListenTopBtn" type="button"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-paper border border-line text-xs font-medium text-ink hover:border-ink/40 transition-all">
+                <svg class="w-3.5 h-3.5 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                </svg>
+                <span>Listen</span>
+              </button>
+              <span id="ex1TypeBadge" class="hidden font-mono text-xs font-medium px-2.5 py-1 rounded-full border"></span>
+            </div>
+          </div>
+
+          <!-- Toggleable Formula Hint -->
+          <div id="ex1HintBox" class="hidden rounded-xl border px-4 py-3 flex flex-wrap items-center gap-2 animate-fade-up">
+            <span id="ex1HintType" class="font-mono text-xs font-semibold uppercase"></span>
+            <span class="text-muted">·</span>
+            <code id="ex1HintFormula" class="font-mono text-xs sm:text-sm font-medium text-ink"></code>
+          </div>
+
+          <!-- Sentence Drop Zone -->
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-[11px] uppercase tracking-wider text-muted">Your Sentence</span>
+              <div class="flex items-center gap-1.5">
+                <button id="ex1UndoBtn" type="button" disabled
+                  class="px-2.5 py-1 rounded-lg text-xs font-medium text-muted hover:text-ink hover:bg-paper disabled:opacity-35 disabled:pointer-events-none transition-colors">
+                  Undo
+                </button>
+                <button id="ex1ClearBtn" type="button" disabled
+                  class="px-2.5 py-1 rounded-lg text-xs font-medium text-muted hover:text-ink hover:bg-paper disabled:opacity-35 disabled:pointer-events-none transition-colors">
+                  Clear
+                </button>
+              </div>
+            </div>
+
+            <div id="ex1DropZone"
+              class="min-h-[84px] p-4 rounded-xl bg-paper/75 border border-line flex flex-wrap items-center gap-2 transition-colors">
+            </div>
+          </div>
+
+          <!-- Word Bank -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-[11px] uppercase tracking-wider text-muted">Word Bank</span>
+              <span class="text-[11px] text-muted">Includes extra distractor words</span>
+            </div>
+            <div id="ex1WordBank" class="flex flex-wrap gap-2 min-h-[46px]"></div>
+          </div>
+
+          <!-- Feedback Box -->
+          <div id="ex1Feedback" class="hidden rounded-xl border p-4 sm:p-5 space-y-2.5 animate-fade-up">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div class="space-y-1">
+                <div id="ex1FeedbackTitle" class="text-sm font-semibold flex items-center gap-2"></div>
+                <p id="ex1FeedbackSentence" class="font-serif text-lg sm:text-xl text-ink"></p>
+              </div>
+              <button id="ex1ListenFeedbackBtn" type="button"
+                class="shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface border border-line text-xs sm:text-sm font-medium text-ink hover:border-ink/40 transition-all shadow-chip">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                </svg>
+                <span>Listen</span>
+              </button>
+            </div>
+            <p id="ex1FeedbackNote" class="text-xs sm:text-sm text-muted pt-2 border-t border-black/5"></p>
+          </div>
+
+          <!-- Card Footer Controls -->
+          <div class="pt-3 border-t border-line flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <button id="ex1HintToggleBtn" type="button"
+              class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-line bg-surface text-sm font-medium text-muted hover:text-ink hover:border-ink/40 transition-all">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                <path d="M9 18h6"/><path d="M10 22h4"/>
+              </svg>
+              <span>Formula Hint</span>
+            </button>
+
+            <div class="flex items-center gap-2.5">
+              <button id="ex1CheckBtn" type="button" disabled
+                class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-ink text-paper text-sm font-medium hover:bg-ink/90 disabled:opacity-35 disabled:cursor-not-allowed transition-all shadow-chip">
+                Check Answer
+              </button>
+              <button id="ex1NextBtn" type="button"
+                class="hidden w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-ink text-paper text-sm font-medium hover:bg-ink/90 transition-all shadow-chip">
+                <span id="ex1NextLabel">Next</span>
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hidden sm:flex items-center justify-center gap-4 text-[11px] font-mono text-muted">
+          <span><kbd class="px-1.5 py-0.5 rounded bg-surface border border-line text-ink">Backspace</kbd> remove last tile</span>
+          <span>·</span>
+          <span><kbd class="px-1.5 py-0.5 rounded bg-surface border border-line text-ink">Enter</kbd> check / next</span>
+        </div>
+      </div>
+
+      <!-- Exercise 1 Summary Screen (after 12/12) -->
+      <div id="ex1SummaryArea" class="hidden bg-surface border border-line rounded-2xl shadow-editorial p-6 sm:p-8 space-y-6 animate-fade-up">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-line pb-5">
+          <div>
+            <span class="font-mono text-xs uppercase tracking-wider text-muted">Exercise 1 Complete</span>
+            <h3 id="ex1SummaryHeadline" class="font-serif text-2xl sm:text-3xl font-medium text-ink mt-1">Well done</h3>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="ex1SummaryScore" class="font-serif text-4xl sm:text-5xl font-medium text-ink">0 / 12</span>
+            <span id="ex1SummaryPct" class="font-mono text-sm text-muted">(0%)</span>
+          </div>
+        </div>
+
+        <div id="ex1MistakesWrap" class="hidden space-y-3">
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-muted">Mistakes to Review</h4>
+          <div id="ex1MistakesList" class="divide-y divide-line border border-line rounded-xl px-4 bg-paper/40"></div>
+        </div>
+
+        <div id="ex1PerfectMsg" class="hidden rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-800 font-medium">
+          Perfect score! You completed all 12 conditional sentences without a single mistake.
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button id="ex1PracticeMistakesBtn" type="button"
+              class="hidden px-4 py-2.5 rounded-xl bg-second-soft border border-second-border text-sm font-medium text-second hover:bg-second/10 transition-all">
+              Practice Mistakes
+            </button>
+            <button id="ex1TryAgainBtn" type="button"
+              class="px-4 py-2.5 rounded-xl bg-surface border border-line text-sm font-medium text-ink hover:border-ink/40 transition-all">
+              Try Again
+            </button>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <span id="ex1SendStatus" class="text-xs font-medium"></span>
+            <button id="ex1SendBtn" type="button"
+              class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-first text-white text-sm font-medium hover:bg-first/90 transition-all shadow-chip">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+              <span>Send to Teacher</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         EXERCISE 2: MATCH THE HALVES (12 PAIRS IN SET A & SET B)
+         ========================================================= -->
+    <section id="panel-ex2" class="exercise-panel hidden space-y-6 animate-fade-up">
+      <div class="space-y-1">
+        <span class="font-mono text-xs uppercase tracking-wider text-muted">Exercise 2 · 12 Pairs</span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-medium text-ink">Match the Halves</h2>
+        <p class="text-sm text-muted">Click an if-clause on the left, then click its matching result on the right. Click any paired item to unlink it.</p>
+      </div>
+
+      <div id="ex2SetsContainer" class="space-y-6"></div>
+
+      <!-- Footer Action Bar -->
+      <div class="bg-surface border border-line rounded-2xl shadow-editorial p-4 sm:p-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="font-mono text-xs uppercase tracking-wider text-muted">Score</span>
+          <span id="ex2ScoreDisplay" class="font-mono text-base font-semibold text-ink">0 / 12</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5">
+          <button id="ex2ResetBtn" type="button"
+            class="px-4 py-2.5 rounded-xl border border-line bg-surface text-sm font-medium text-muted hover:text-ink hover:border-ink/40 transition-all">
+            Reset
+          </button>
+          <button id="ex2CheckBtn" type="button"
+            class="px-5 py-2.5 rounded-xl bg-ink text-paper text-sm font-medium hover:bg-ink/90 transition-all shadow-chip">
+            Check Answers
+          </button>
+          <button id="ex2SendBtn" type="button"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-first text-white text-sm font-medium hover:bg-first/90 transition-all shadow-chip">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+            <span>Send to Teacher</span>
+          </button>
+        </div>
+      </div>
+      <div id="ex2SendStatus" class="text-right text-xs font-medium min-h-[18px]"></div>
+    </section>
+
+    <!-- =========================================================
+         EXERCISE 3: IDENTIFY THE CONDITIONAL TYPE (12 SENTENCES)
+         ========================================================= -->
+    <section id="panel-ex3" class="exercise-panel hidden space-y-6 animate-fade-up">
+      <div class="space-y-1">
+        <span class="font-mono text-xs uppercase tracking-wider text-muted">Exercise 3 · 12 Sentences</span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-medium text-ink">Identify the Conditional Type</h2>
+        <p class="text-sm text-muted">Read each sentence and select whether it is Zero, First, Second, or Third Conditional.</p>
+      </div>
+
+      <div id="ex3ListContainer" class="space-y-3"></div>
+
+      <!-- Footer Action Bar -->
+      <div class="bg-surface border border-line rounded-2xl shadow-editorial p-4 sm:p-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="font-mono text-xs uppercase tracking-wider text-muted">Score</span>
+          <span id="ex3ScoreDisplay" class="font-mono text-base font-semibold text-ink">0 / 12</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5">
+          <button id="ex3ResetBtn" type="button"
+            class="px-4 py-2.5 rounded-xl border border-line bg-surface text-sm font-medium text-muted hover:text-ink hover:border-ink/40 transition-all">
+            Reset
+          </button>
+          <button id="ex3CheckBtn" type="button"
+            class="px-5 py-2.5 rounded-xl bg-ink text-paper text-sm font-medium hover:bg-ink/90 transition-all shadow-chip">
+            Check Answers
+          </button>
+          <button id="ex3SendBtn" type="button"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-first text-white text-sm font-medium hover:bg-first/90 transition-all shadow-chip">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+            <span>Send to Teacher</span>
+          </button>
+        </div>
+      </div>
+      <div id="ex3SendStatus" class="text-right text-xs font-medium min-h-[18px]"></div>
+    </section>
+
+    <!-- =========================================================
+         EXERCISE 4: FILL IN THE VERB — ONE GAP (12 SENTENCES)
+         ========================================================= -->
+    <section id="panel-ex4" class="exercise-panel hidden space-y-6 animate-fade-up">
+      <div class="space-y-1">
+        <span class="font-mono text-xs uppercase tracking-wider text-muted">Exercise 4 · 12 Sentences</span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-medium text-ink">Fill in the Verb — One Gap</h2>
+        <p class="text-sm text-muted">Type the correct form of the verb in brackets. Both full forms and contractions (like <em>don't</em>, <em>won't</em>, <em>wouldn't</em>) are accepted.</p>
+      </div>
+
+      <div id="ex4ListContainer" class="bg-surface border border-line rounded-2xl shadow-editorial divide-y divide-line"></div>
+
+      <!-- Footer Action Bar -->
+      <div class="bg-surface border border-line rounded-2xl shadow-editorial p-4 sm:p-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="font-mono text-xs uppercase tracking-wider text-muted">Score</span>
+          <span id="ex4ScoreDisplay" class="font-mono text-base font-semibold text-ink">0 / 12</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5">
+          <button id="ex4ResetBtn" type="button"
+            class="px-4 py-2.5 rounded-xl border border-line bg-surface text-sm font-medium text-muted hover:text-ink hover:border-ink/40 transition-all">
+            Reset
+          </button>
+          <button id="ex4CheckBtn" type="button"
+            class="px-5 py-2.5 rounded-xl bg-ink text-paper text-sm font-medium hover:bg-ink/90 transition-all shadow-chip">
+            Check Answers
+          </button>
+          <button id="ex4SendBtn" type="button"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-first text-white text-sm font-medium hover:bg-first/90 transition-all shadow-chip">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+            <span>Send to Teacher</span>
+          </button>
+        </div>
+      </div>
+      <div id="ex4SendStatus" class="text-right text-xs font-medium min-h-[18px]"></div>
+    </section>
+
+    <!-- =========================================================
+         EXERCISE 5: FILL IN THE VERBS — BOTH CLAUSES (12 SENTENCES)
+         ========================================================= -->
+    <section id="panel-ex5" class="exercise-panel hidden space-y-6 animate-fade-up">
+      <div class="space-y-1">
+        <span class="font-mono text-xs uppercase tracking-wider text-muted">Exercise 5 · 12 Sentences</span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-medium text-ink">Fill in the Verbs — Both Clauses</h2>
+        <p class="text-sm text-muted">Use the conditional type badge on each sentence to fill in both verbs correctly. A sentence scores a point when both gaps are right.</p>
+      </div>
+
+      <div id="ex5ListContainer" class="bg-surface border border-line rounded-2xl shadow-editorial divide-y divide-line"></div>
+
+      <!-- Footer Action Bar -->
+      <div class="bg-surface border border-line rounded-2xl shadow-editorial p-4 sm:p-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="font-mono text-xs uppercase tracking-wider text-muted">Score</span>
+          <span id="ex5ScoreDisplay" class="font-mono text-base font-semibold text-ink">0 / 12</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5">
+          <button id="ex5ResetBtn" type="button"
+            class="px-4 py-2.5 rounded-xl border border-line bg-surface text-sm font-medium text-muted hover:text-ink hover:border-ink/40 transition-all">
+            Reset
+          </button>
+          <button id="ex5CheckBtn" type="button"
+            class="px-5 py-2.5 rounded-xl bg-ink text-paper text-sm font-medium hover:bg-ink/90 transition-all shadow-chip">
+            Check Answers
+          </button>
+          <button id="ex5SendBtn" type="button"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-first text-white text-sm font-medium hover:bg-first/90 transition-all shadow-chip">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+            <span>Send to Teacher</span>
+          </button>
+        </div>
+      </div>
+      <div id="ex5SendStatus" class="text-right text-xs font-medium min-h-[18px]"></div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="border-t border-line py-5 mt-auto">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted">
+      <span class="font-serif text-ink">Conditionals Studio</span>
+      <span class="font-mono text-[11px]">Zero · First · Second · Third Conditionals</span>
+    </div>
+  </footer>
+
+  <!-- ==================== GRAMMAR GUIDE MODAL ==================== -->
+  <div id="guideModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-ink/40 backdrop-blur-sm">
+    <div class="bg-surface border border-line rounded-2xl shadow-2xl w-full max-w-3xl max-h-[88vh] flex flex-col overflow-hidden animate-fade-up">
+      <div class="px-5 sm:px-7 py-4 border-b border-line flex items-center justify-between bg-paper/70">
+        <div>
+          <h2 class="font-serif text-xl sm:text-2xl font-medium text-ink">Grammar Guide</h2>
+          <p class="text-xs text-muted mt-0.5">Quick reference for Zero, First, Second &amp; Third Conditionals</p>
+        </div>
+        <button id="closeGuideBtn" type="button"
+          class="w-9 h-9 rounded-xl border border-line bg-surface flex items-center justify-center text-muted hover:text-ink hover:border-ink/40 transition-colors"
+          aria-label="Close guide">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-5 sm:p-7 overflow-y-auto space-y-3.5">
+        <div id="guideCardsContainer" class="space-y-3.5"></div>
+        <div class="rounded-xl bg-paper border border-line p-4 text-xs sm:text-sm text-muted leading-relaxed">
+          <strong class="text-ink font-semibold">Tip:</strong> Start with <em>If</em> and place a comma between the two clauses. You do not need the word <em>then</em> in natural English.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== APPLICATION SCRIPT ==================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* =========================================================================
+       * 1. TELEGRAM CONFIGURATION
+       * ========================================================================= */
+      const TELEGRAM_BOT_TOKEN = '9000524592:AAFGz0I36Xc4XS2Y4qyNMfQzaxaWZMkLxGU';
+      const TELEGRAM_CHAT_ID = '749833850';
+
+      /* =========================================================================
+       * 2. CONDITIONAL TYPES METADATA
+       * ========================================================================= */
+      const TYPE_META = {
+        0: {
+          short: 'Zero',
+          name: 'Zero Conditional',
+          usage: 'General truths, scientific facts, rules, and habits that are always true.',
+          formula: 'If + Present Simple, Present Simple',
+          example: 'If you heat water to 100°C, it boils.',
+          text: 'text-zero',
+          bg: 'bg-zero-soft',
+          border: 'border-zero-border',
+          activeBg: 'bg-zero text-white border-zero',
+        },
+        1: {
+          short: 'First',
+          name: 'First Conditional',
+          usage: 'Real and possible future situations, plans, warnings, and predictions.',
+          formula: "If + Present Simple, will / won't + base verb",
+          example: 'If the train is delayed, we will miss the meeting.',
+          text: 'text-first',
+          bg: 'bg-first-soft',
+          border: 'border-first-border',
+          activeBg: 'bg-first text-white border-first',
+        },
+        2: {
+          short: 'Second',
+          name: 'Second Conditional',
+          usage: 'Imaginary, unlikely, or unreal situations in the present or future, and advice.',
+          formula: "If + Past Simple (were), would / wouldn't + base verb",
+          example: 'If I were you, I would negotiate a higher salary.',
+          text: 'text-second',
+          bg: 'bg-second-soft',
+          border: 'border-second-border',
+          activeBg: 'bg-second text-white border-second',
+        },
+        3: {
+          short: 'Third',
+          name: 'Third Conditional',
+          usage: 'Unreal past situations, regrets, and imaginary results of past events.',
+          formula: "If + Past Perfect (had + V3), would / wouldn't have + V3",
+          example: 'If I had checked my email, I would have seen the update.',
+          text: 'text-third',
+          bg: 'bg-third-soft',
+          border: 'border-third-border',
+          activeBg: 'bg-third text-white border-third',
+        },
+      };
+
+      // Subtle distinct pill colors for paired items in Exercise 2
+      const PAIR_BADGE_STYLES = [
+        'bg-zero-soft text-zero border-zero-border',
+        'bg-first-soft text-first border-first-border',
+        'bg-second-soft text-second border-second-border',
+        'bg-third-soft text-third border-third-border',
+        'bg-slate-100 text-slate-700 border-slate-300',
+        'bg-amber-50 text-amber-800 border-amber-200',
+      ];
+
+      /* =========================================================================
+       * 3. 60 UNIQUE ADULT SENTENCES (12 PER EXERCISE: 3 ZERO, 3 FIRST, 3 SECOND, 3 THIRD)
+       * ========================================================================= */
+
+      // --- EXERCISE 1: COMPLETE THE CLAUSE (12 sentences) ---
+      const EX1_DATA = [
+        {
+          id: 1, type: 0, hiddenSide: 'main', context: 'Scientific fact',
+          ifClause: ['If', 'you', 'heat', 'water', 'to', '100°C'],
+          mainClause: ['it', 'boils'],
+          distractors: ['boiled', 'would', 'will'],
+          full: 'If you heat water to 100°C, it boils.',
+          note: 'Zero Conditional: general scientific fact — Present Simple in both clauses.',
+        },
+        {
+          id: 2, type: 1, hiddenSide: 'main', context: 'Future travel risk',
+          ifClause: ['If', 'the', 'train', 'is', 'delayed'],
+          mainClause: ['we', 'will', 'miss', 'the', 'meeting'],
+          distractors: ['would', 'missed'],
+          full: 'If the train is delayed, we will miss the meeting.',
+          note: 'First Conditional: real future possibility — Present Simple + will + base verb.',
+        },
+        {
+          id: 3, type: 2, hiddenSide: 'main', context: 'Career advice',
+          ifClause: ['If', 'I', 'were', 'you'],
+          mainClause: ['I', 'would', 'negotiate', 'a', 'higher', 'salary'],
+          distractors: ['will', 'negotiated'],
+          full: 'If I were you, I would negotiate a higher salary.',
+          note: 'Second Conditional: advice — Past Simple (were) + would + base verb.',
+        },
+        {
+          id: 4, type: 3, hiddenSide: 'main', context: 'Past mistake at work',
+          ifClause: ['If', 'I', 'had', 'checked', 'my', 'email'],
+          mainClause: ['I', 'would', 'have', 'seen', 'the', 'update'],
+          distractors: ['saw', 'will'],
+          full: 'If I had checked my email, I would have seen the update.',
+          note: 'Third Conditional: unreal past — had + V3, would have + V3.',
+        },
+        {
+          id: 5, type: 0, hiddenSide: 'if', context: 'Software rule',
+          ifClause: ['If', 'you', "don't", 'save', 'the', 'file'],
+          mainClause: ['you', 'lose', 'your', 'progress'],
+          distractors: ["didn't", "won't"],
+          full: "If you don't save the file, you lose your progress.",
+          note: 'Zero Conditional: always true result — Present Simple in both clauses.',
+        },
+        {
+          id: 6, type: 1, hiddenSide: 'if', context: 'Future relocation',
+          ifClause: ['If', 'she', 'accepts', 'the', 'offer'],
+          mainClause: ['she', 'will', 'move', 'to', 'Lisbon'],
+          distractors: ['accepted', 'will'],
+          full: 'If she accepts the offer, she will move to Lisbon.',
+          note: 'First Conditional: use Present Simple (never "will") in the if-clause.',
+        },
+        {
+          id: 7, type: 2, hiddenSide: 'if', context: 'Imaginary job offer',
+          ifClause: ['If', 'they', 'offered', 'remote', 'work'],
+          mainClause: ['I', 'would', 'apply', 'for', 'the', 'role'],
+          distractors: ['offer', 'had'],
+          full: 'If they offered remote work, I would apply for the role.',
+          note: 'Second Conditional: hypothetical present — Past Simple + would + base verb.',
+        },
+        {
+          id: 8, type: 3, hiddenSide: 'if', context: 'Missed flight',
+          ifClause: ['If', 'we', 'had', 'left', 'earlier'],
+          mainClause: ['we', 'would', 'have', 'caught', 'the', 'flight'],
+          distractors: ['leave', 'would'],
+          full: 'If we had left earlier, we would have caught the flight.',
+          note: 'Third Conditional: past regret — Past Perfect (had left) + would have caught.',
+        },
+        {
+          id: 9, type: 0, hiddenSide: 'main', context: 'Evening habit',
+          ifClause: ['If', 'I', 'drink', 'coffee', 'late'],
+          mainClause: ['I', "don't", 'sleep', 'well'],
+          distractors: ["won't", "wouldn't"],
+          full: "If I drink coffee late, I don't sleep well.",
+          note: 'Zero Conditional: personal habit that happens every time — Present Simple.',
+        },
+        {
+          id: 10, type: 1, hiddenSide: 'main', context: 'Product launch',
+          ifClause: ['If', 'they', 'approve', 'the', 'budget'],
+          mainClause: ['we', 'will', 'launch', 'next', 'month'],
+          distractors: ['would', 'launched'],
+          full: 'If they approve the budget, we will launch next month.',
+          note: 'First Conditional: realistic future plan — Present Simple + will launch.',
+        },
+        {
+          id: 11, type: 2, hiddenSide: 'main', context: 'Team capacity',
+          ifClause: ['If', 'we', 'had', 'a', 'larger', 'team'],
+          mainClause: ['we', 'would', 'finish', 'much', 'faster'],
+          distractors: ['will', 'finished'],
+          full: 'If we had a larger team, we would finish much faster.',
+          note: 'Second Conditional: unreal present — Past Simple (had) + would finish.',
+        },
+        {
+          id: 12, type: 3, hiddenSide: 'main', context: 'Software release bug',
+          ifClause: ['If', 'they', 'had', 'tested', 'the', 'code'],
+          mainClause: ['the', 'bug', "wouldn't", 'have', 'happened'],
+          distractors: ["won't", 'happen'],
+          full: "If they had tested the code, the bug wouldn't have happened.",
+          note: "Third Conditional: past incident — Past Perfect + wouldn't have + V3.",
+        },
+      ];
+
+      // --- EXERCISE 2: MATCH THE HALVES (Set A = 6 pairs, Set B = 6 pairs) ---
+      const EX2_SETS = [
+        {
+          id: 'A',
+          title: 'Set A',
+          subtitle: 'Pairs 1 – 6',
+          pairs: [
+            { id: 1, type: 0, left: 'If you press this key,', right: 'the screen locks immediately.' },
+            { id: 2, type: 1, left: 'If you finish the report today,', right: 'I will review it tonight.' },
+            { id: 3, type: 2, left: 'If we lived closer to the sea,', right: 'we would swim every morning.' },
+            { id: 4, type: 3, left: 'If she had studied harder,', right: 'she would have passed the exam.' },
+            { id: 5, type: 0, left: 'If the server overloads,', right: 'the system restarts automatically.' },
+            { id: 6, type: 1, left: 'If it rains tomorrow,', right: 'we will hold the event indoors.' },
+          ],
+        },
+        {
+          id: 'B',
+          title: 'Set B',
+          subtitle: 'Pairs 7 – 12',
+          pairs: [
+            { id: 7, type: 2, left: 'If she knew his number,', right: 'she would call him directly.' },
+            { id: 8, type: 3, left: 'If he had read the contract,', right: 'he would have noticed the fee.' },
+            { id: 9, type: 0, left: 'If temperatures drop below zero,', right: 'water freezes into ice.' },
+            { id: 10, type: 1, left: 'If we book our tickets early,', right: 'we will get a discount.' },
+            { id: 11, type: 2, left: 'If he spoke German fluently,', right: 'he would work in Berlin.' },
+            { id: 12, type: 3, left: 'If we had backed up the data,', right: "we wouldn't have lost anything." },
+          ],
+        },
+      ];
+
+      // --- EXERCISE 3: IDENTIFY THE CONDITIONAL TYPE (12 sentences) ---
+      const EX3_DATA = [
+        { id: 1, type: 1, text: 'If the client agrees to our terms, we will sign the contract on Friday.' },
+        { id: 2, type: 0, text: 'If people work without regular breaks, their focus drops quickly.' },
+        { id: 3, type: 3, text: 'If you had told me about the change yesterday, I would have helped you.' },
+        { id: 4, type: 2, text: 'If the office were quieter, I would concentrate much better.' },
+        { id: 5, type: 0, text: 'If you enter the wrong password three times, your account locks.' },
+        { id: 6, type: 2, text: 'If I had more free time this year, I would learn Italian.' },
+        { id: 7, type: 3, text: 'If they had invested in that company in 2015, they would have tripled their money.' },
+        { id: 8, type: 1, text: "If you don't leave for the station soon, you will get stuck in traffic." },
+        { id: 9, type: 0, text: 'If you mix blue and yellow paint, you get green.' },
+        { id: 10, type: 3, text: "If I hadn't forgotten my passport at home, I would have boarded the plane." },
+        { id: 11, type: 1, text: 'If you practice speaking consistently, your fluency will improve.' },
+        { id: 12, type: 2, text: "If I didn't have a strict deadline tonight, I would join you for dinner." },
+      ];
+
+      // --- EXERCISE 4: FILL IN THE VERB — ONE GAP (12 sentences) ---
+      const EX4_DATA = [
+        {
+          id: 1, type: 0,
+          segments: ['If you heat ice, it ', { cue: 'melt', answers: ['melts'] }, '.'],
+        },
+        {
+          id: 2, type: 1,
+          segments: ["If we don't hurry, we ", { cue: 'miss', answers: ['will miss', "'ll miss"] }, ' the last ferry.'],
+        },
+        {
+          id: 3, type: 2,
+          segments: ['If I were the CEO, I ', { cue: 'reduce', answers: ['would reduce', "'d reduce"] }, ' unnecessary meetings.'],
+        },
+        {
+          id: 4, type: 3,
+          segments: ['If he had known about the traffic, he ', { cue: 'take', answers: ['would have taken', "'d have taken", "would've taken"] }, ' the subway.'],
+        },
+        {
+          id: 5, type: 0,
+          segments: ['If a plant ', { cue: 'not / get', answers: ["doesn't get", 'does not get'] }, ' enough sunlight, it dies.'],
+        },
+        {
+          id: 6, type: 1,
+          segments: ['If the package ', { cue: 'arrive', answers: ['arrives'] }, ' before five, I will sign for it.'],
+        },
+        {
+          id: 7, type: 2,
+          segments: ['If she ', { cue: 'earn', answers: ['earned'] }, ' more money, she would buy an apartment downtown.'],
+        },
+        {
+          id: 8, type: 3,
+          segments: ['If they ', { cue: 'invite', answers: ['had invited', "'d invited"] }, ' us to the conference, we would have attended.'],
+        },
+        {
+          id: 9, type: 0,
+          segments: ['If you turn off Wi-Fi, the phone ', { cue: 'switch', answers: ['switches'] }, ' to mobile data.'],
+        },
+        {
+          id: 10, type: 1,
+          segments: ["If you don't charge your laptop, the battery ", { cue: 'die', answers: ['will die', "'ll die"] }, ' during the call.'],
+        },
+        {
+          id: 11, type: 2,
+          segments: ["If we didn't live so far apart, we ", { cue: 'see', answers: ['would see', "'d see"] }, ' each other every week.'],
+        },
+        {
+          id: 12, type: 3,
+          segments: ["If you hadn't skipped breakfast, you ", { cue: 'not / feel', answers: ["wouldn't have felt", 'would not have felt', "wouldn't've felt"] }, ' so tired at noon.'],
+        },
+      ];
+
+      // --- EXERCISE 5: FILL IN THE VERBS — BOTH CLAUSES (12 sentences) ---
+      const EX5_DATA = [
+        {
+          id: 1, type: 1,
+          segments: [
+            'If the presentation ', { cue: 'go', answers: ['goes'] },
+            ' well, the board ', { cue: 'fund', answers: ['will fund', "'ll fund"] }, ' our project.',
+          ],
+        },
+        {
+          id: 2, type: 0,
+          segments: [
+            'If you ', { cue: 'leave', answers: ['leave'] },
+            ' milk out overnight, it ', { cue: 'spoil', answers: ['spoils'] }, '.',
+          ],
+        },
+        {
+          id: 3, type: 2,
+          segments: [
+            'If I ', { cue: 'own', answers: ['owned'] },
+            ' a small café, I ', { cue: 'serve', answers: ['would serve', "'d serve"] }, ' fresh pastries every morning.',
+          ],
+        },
+        {
+          id: 4, type: 3,
+          segments: [
+            'If she ', { cue: 'set', answers: ['had set', "'d set"] },
+            ' an alarm, she ', { cue: 'not / oversleep', answers: ["wouldn't have overslept", 'would not have overslept'] }, '.',
+          ],
+        },
+        {
+          id: 5, type: 0,
+          segments: [
+            'If drivers ', { cue: 'ignore', answers: ['ignore'] },
+            ' red lights, accidents ', { cue: 'happen', answers: ['happen'] }, '.',
+          ],
+        },
+        {
+          id: 6, type: 3,
+          segments: [
+            'If we ', { cue: 'book', answers: ['had booked', "'d booked"] },
+            ' a hotel sooner, we ', { cue: 'pay', answers: ['would have paid', "'d have paid", "would've paid"] }, ' half the price.',
+          ],
+        },
+        {
+          id: 7, type: 1,
+          segments: [
+            'If you ', { cue: 'not / wear', answers: ["don't wear", 'do not wear'] },
+            ' a coat, you ', { cue: 'catch', answers: ['will catch', "'ll catch"] }, ' a cold.',
+          ],
+        },
+        {
+          id: 8, type: 2,
+          segments: [
+            'If he ', { cue: 'not / travel', answers: ["didn't travel", 'did not travel'] },
+            ' so much for work, he ', { cue: 'adopt', answers: ['would adopt', "'d adopt"] }, ' a dog.',
+          ],
+        },
+        {
+          id: 9, type: 3,
+          segments: [
+            'If they ', { cue: 'listen', answers: ['had listened', "'d listened"] },
+            ' to the warning, they ', { cue: 'avoid', answers: ['would have avoided', "'d have avoided", "would've avoided"] }, ' the fine.',
+          ],
+        },
+        {
+          id: 10, type: 0,
+          segments: [
+            'If you ', { cue: 'not / water', answers: ["don't water", 'do not water'] },
+            ' herbs regularly, their leaves ', { cue: 'turn', answers: ['turn'] }, ' yellow.',
+          ],
+        },
+        {
+          id: 11, type: 1,
+          segments: [
+            'If my colleague ', { cue: 'need', answers: ['needs'] },
+            ' help with the slides, I ', { cue: 'stay', answers: ['will stay', "'ll stay"] }, ' an extra hour.',
+          ],
+        },
+        {
+          id: 12, type: 2,
+          segments: [
+            'If the ticket ', { cue: 'not / be', answers: ["weren't", 'were not', "wasn't", 'was not'] },
+            ' so expensive, I ', { cue: 'fly', answers: ['would fly', "'d fly"] }, ' to Tokyo next week.',
+          ],
+        },
+      ];
+
+      /* =========================================================================
+       * 4. GLOBAL APP STATE & HELPERS
+       * ========================================================================= */
+      const TABS = [
+        { id: 'ex1', short: 'Ex 1', title: 'Complete the Clause', total: 12 },
+        { id: 'ex2', short: 'Ex 2', title: 'Match the Halves', total: 12 },
+        { id: 'ex3', short: 'Ex 3', title: 'Identify the Type', total: 12 },
+        { id: 'ex4', short: 'Ex 4', title: 'Verb Forms (One Gap)', total: 12 },
+        { id: 'ex5', short: 'Ex 5', title: 'Verb Forms (Both Clauses)', total: 12 },
+      ];
+
+      const appState = {
+        activeTab: 'ex1',
+        scores: { ex1: null, ex2: null, ex3: null, ex4: null, ex5: null },
+      };
+
+      // Fisher-Yates shuffle returning a new array
+      function shuffle(arr) {
+        const copy = arr.slice();
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      // Normalize user text input for forgiving grammar validation
+      function normalizeAnswer(str) {
+        return String(str || '')
+          .trim()
+          .toLowerCase()
+          .replace(/[\u2018\u2019`]/g, "'")
+          .replace(/\s+/g, ' ');
+      }
+
+      function isAnswerMatch(userInput, acceptedList) {
+        const norm = normalizeAnswer(userInput);
+        if (!norm) return false;
+        return acceptedList.some((ans) => normalizeAnswer(ans) === norm);
+      }
+
+      // Escape HTML for safe Telegram HTML formatting
+      function escapeHtml(str) {
+        return String(str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+
+      // Web Speech API Pronunciation Helper
+      function speakText(text) {
+        try {
+          if (!('speechSynthesis' in window) || !text) return;
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = 'en-US';
+          utter.rate = 0.94;
+          const voices = window.speechSynthesis.getVoices();
+          const preferred =
+            voices.find((v) => v.lang === 'en-GB' && /Google|Natural|Daniel|Martha/i.test(v.name)) ||
+            voices.find((v) => v.lang === 'en-US' && /Google|Natural|Samantha/i.test(v.name)) ||
+            voices.find((v) => v.lang && v.lang.startsWith('en'));
+          if (preferred) utter.voice = preferred;
+          window.speechSynthesis.speak(utter);
+        } catch (err) {
+          console.warn('Speech synthesis error:', err);
+        }
+      }
+
+      /* =========================================================================
+       * 5. STUDENT NAME & TELEGRAM SENDER
+       * ========================================================================= */
+      const studentNameInput = document.getElementById('studentNameInput');
+      const nameRequiredBanner = document.getElementById('nameRequiredBanner');
+      const dismissNameBannerBtn = document.getElementById('dismissNameBannerBtn');
+
+      // Load saved name from localStorage
+      try {
+        const savedName = localStorage.getItem('conditionals_studio_name');
+        if (savedName) studentNameInput.value = savedName;
+      } catch (e) { /* ignore storage restrictions */ }
+
+      studentNameInput.addEventListener('input', () => {
+        const val = studentNameInput.value.trim();
+        if (val) {
+          nameRequiredBanner.classList.add('hidden');
+          studentNameInput.classList.remove('border-third', 'ring-2', 'ring-third/20');
+        }
+        try {
+          localStorage.setItem('conditionals_studio_name', studentNameInput.value);
+        } catch (e) { /* ignore */ }
+      });
+
+      dismissNameBannerBtn.addEventListener('click', () => {
+        nameRequiredBanner.classList.add('hidden');
+      });
+
+      function requireStudentName() {
+        const name = studentNameInput.value.trim();
+        if (!name) {
+          nameRequiredBanner.classList.remove('hidden');
+          studentNameInput.classList.add('border-third', 'ring-2', 'ring-third/20');
+          studentNameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          studentNameInput.focus();
+          return null;
+        }
+        return name;
+      }
+
+      /**
+       * Sends exercise results to the teacher via Telegram Bot API.
+       * @param {Object} opts - { exerciseTitle, score, total, mistakes: string[], buttonEl, statusEl }
+       */
+      async function sendResultsToTeacher({ exerciseTitle, score, total, mistakes, buttonEl, statusEl }) {
+        const studentName = requireStudentName();
+        if (!studentName) return;
+
+        const pct = Math.round((score / total) * 100);
+        let msg = `<b>Conditionals Studio</b>\n`;
+        msg += `<b>Student:</b> ${escapeHtml(studentName)}\n`;
+        msg += `<b>Exercise:</b> ${escapeHtml(exerciseTitle)}\n`;
+        msg += `<b>Score:</b> ${score}/${total} (${pct}%)\n`;
+
+        if (mistakes.length === 0) {
+          msg += `\n<b>Result:</b> Perfect score! No mistakes.`;
+        } else {
+          msg += `\n<b>Mistakes (${mistakes.length}):</b>\n`;
+          const maxShow = 12;
+          mistakes.slice(0, maxShow).forEach((line) => {
+            msg += `• ${escapeHtml(line)}\n`;
+          });
+        }
+
+        const originalHTML = buttonEl.innerHTML;
+        buttonEl.disabled = true;
+        buttonEl.innerHTML = `<span>Sending...</span>`;
+        if (statusEl) {
+          statusEl.textContent = '';
+          statusEl.className = 'text-right text-xs font-medium min-h-[18px] text-muted';
+        }
+
+        try {
+          const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: TELEGRAM_CHAT_ID,
+              text: msg,
+              parse_mode: 'HTML',
+            }),
+          });
+
+          const data = await response.json();
+          if (!response.ok || !data.ok) {
+            throw new Error(data.description || 'Telegram API error');
+          }
+
+          buttonEl.classList.remove('bg-first', 'hover:bg-first/90', 'bg-ink', 'hover:bg-ink/90');
+          buttonEl.classList.add('bg-emerald-700', 'hover:bg-emerald-800');
+          buttonEl.innerHTML = `<span>Sent to Teacher &#10003;</span>`;
+          if (statusEl) {
+            statusEl.textContent = 'Your results have been sent to your teacher.';
+            statusEl.className = 'text-right text-xs font-medium min-h-[18px] text-emerald-700';
+          }
+
+          setTimeout(() => {
+            buttonEl.disabled = false;
+          }, 1500);
+        } catch (err) {
+          console.error('Telegram send failed:', err);
+          buttonEl.disabled = false;
+          buttonEl.innerHTML = originalHTML;
+          if (statusEl) {
+            statusEl.textContent = 'Could not send results. Please check your internet connection and try again.';
+            statusEl.className = 'text-right text-xs font-medium min-h-[18px] text-third';
+          }
+        }
+      }
+
+      /* =========================================================================
+       * 6. TAB NAVIGATION & PROGRESS BADGES
+       * ========================================================================= */
+      const exerciseTabStrip = document.getElementById('exerciseTabStrip');
+
+      function renderTabs() {
+        exerciseTabStrip.innerHTML = '';
+        TABS.forEach((tab) => {
+          const isActive = appState.activeTab === tab.id;
+          const score = appState.scores[tab.id];
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = [
+            'shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all border',
+            isActive
+              ? 'bg-ink text-paper border-ink shadow-chip'
+              : 'bg-paper/70 text-muted border-transparent hover:text-ink hover:bg-paper',
+          ].join(' ');
+
+          let badgeHtml = '';
+          if (score !== null) {
+            const isPerfect = score === tab.total;
+            const badgeClass = isActive
+              ? 'bg-white/20 text-paper'
+              : isPerfect
+                ? 'bg-emerald-100 text-emerald-800'
+                : 'bg-surface border border-line text-ink';
+            badgeHtml = `<span class="font-mono text-[11px] px-1.5 py-0.5 rounded-md ${badgeClass}">${score}/${tab.total}</span>`;
+          } else {
+            badgeHtml = `<span class="w-1.5 h-1.5 rounded-full ${isActive ? 'bg-paper/50' : 'bg-line'}"></span>`;
+          }
+
+          btn.innerHTML = `<span class="font-mono text-[11px] opacity-75">${tab.short}</span><span>${tab.title}</span>${badgeHtml}`;
+          btn.addEventListener('click', () => switchTab(tab.id));
+          exerciseTabStrip.appendChild(btn);
+        });
+      }
+
+      function switchTab(tabId) {
+        appState.activeTab = tabId;
+        document.querySelectorAll('.exercise-panel').forEach((el) => {
+          el.classList.toggle('hidden', el.id !== `panel-${tabId}`);
+        });
+        renderTabs();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      /* =========================================================================
+       * 7. GRAMMAR GUIDE MODAL
+       * ========================================================================= */
+      const guideModal = document.getElementById('guideModal');
+      const guideCardsContainer = document.getElementById('guideCardsContainer');
+
+      function renderGrammarGuide() {
+        guideCardsContainer.innerHTML = '';
+        [0, 1, 2, 3].forEach((t) => {
+          const m = TYPE_META[t];
+          const card = document.createElement('div');
+          card.className = `rounded-xl border ${m.border} ${m.bg} p-4 sm:p-5 space-y-2`;
+          card.innerHTML = `
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="font-serif font-medium text-lg ${m.text}">${m.name}</h3>
+              <code class="font-mono text-xs px-2.5 py-1 rounded-lg bg-surface border ${m.border} text-ink">${m.formula}</code>
+            </div>
+            <p class="text-xs sm:text-sm text-ink/80">${m.usage}</p>
+            <p class="font-serif italic text-sm sm:text-base text-ink pt-1">“${m.example}”</p>
+          `;
+          guideCardsContainer.appendChild(card);
+        });
+      }
+
+      document.getElementById('openGuideBtn').addEventListener('click', () => guideModal.classList.remove('hidden'));
+      document.getElementById('closeGuideBtn').addEventListener('click', () => guideModal.classList.add('hidden'));
+      guideModal.addEventListener('click', (e) => {
+        if (e.target === guideModal) guideModal.classList.add('hidden');
+      });
+
+      /* =========================================================================
+       * 8. EXERCISE 1: COMPLETE THE CLAUSE (STEP-BY-STEP WORD BUILDER)
+       * ========================================================================= */
+      const ex1 = {
+        queue: [],
+        index: 0,
+        score: 0,
+        isPracticeMode: false,
+        answered: false,
+        hintVisible: false,
+        tiles: [],      // [{ uid, word, used }]
+        placed: [],     // [uid, ...]
+        mistakes: [],   // [{ item, built }]
+      };
+
+      const ex1Dom = {
+        activeArea: document.getElementById('ex1ActiveArea'),
+        summaryArea: document.getElementById('ex1SummaryArea'),
+        progressLabel: document.getElementById('ex1ProgressLabel'),
+        practiceBadge: document.getElementById('ex1PracticeBadge'),
+        scoreLive: document.getElementById('ex1ScoreLive'),
+        progressFill: document.getElementById('ex1ProgressFill'),
+        card: document.getElementById('ex1Card'),
+        contextLabel: document.getElementById('ex1ContextLabel'),
+        typeBadge: document.getElementById('ex1TypeBadge'),
+        listenTopBtn: document.getElementById('ex1ListenTopBtn'),
+        hintBox: document.getElementById('ex1HintBox'),
+        hintType: document.getElementById('ex1HintType'),
+        hintFormula: document.getElementById('ex1HintFormula'),
+        dropZone: document.getElementById('ex1DropZone'),
+        wordBank: document.getElementById('ex1WordBank'),
+        undoBtn: document.getElementById('ex1UndoBtn'),
+        clearBtn: document.getElementById('ex1ClearBtn'),
+        feedback: document.getElementById('ex1Feedback'),
+        feedbackTitle: document.getElementById('ex1FeedbackTitle'),
+        feedbackSentence: document.getElementById('ex1FeedbackSentence'),
+        feedbackNote: document.getElementById('ex1FeedbackNote'),
+        listenFeedbackBtn: document.getElementById('ex1ListenFeedbackBtn'),
+        hintToggleBtn: document.getElementById('ex1HintToggleBtn'),
+        checkBtn: document.getElementById('ex1CheckBtn'),
+        nextBtn: document.getElementById('ex1NextBtn'),
+        nextLabel: document.getElementById('ex1NextLabel'),
+        summaryHeadline: document.getElementById('ex1SummaryHeadline'),
+        summaryScore: document.getElementById('ex1SummaryScore'),
+        summaryPct: document.getElementById('ex1SummaryPct'),
+        mistakesWrap: document.getElementById('ex1MistakesWrap'),
+        mistakesList: document.getElementById('ex1MistakesList'),
+        perfectMsg: document.getElementById('ex1PerfectMsg'),
+        practiceMistakesBtn: document.getElementById('ex1PracticeMistakesBtn'),
+        tryAgainBtn: document.getElementById('ex1TryAgainBtn'),
+        sendBtn: document.getElementById('ex1SendBtn'),
+        sendStatus: document.getElementById('ex1SendStatus'),
+      };
+
+      function startEx1(itemsList = null, practiceMode = false) {
+        ex1.queue = itemsList ? itemsList.slice() : EX1_DATA.slice();
+        ex1.index = 0;
+        ex1.score = 0;
+        ex1.isPracticeMode = practiceMode;
+        ex1.mistakes = [];
+
+        ex1Dom.activeArea.classList.remove('hidden');
+        ex1Dom.summaryArea.classList.add('hidden');
+        ex1Dom.practiceBadge.classList.toggle('hidden', !practiceMode);
+
+        // Reset Send button visual state
+        ex1Dom.sendBtn.disabled = false;
+        ex1Dom.sendBtn.className = 'inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-first text-white text-sm font-medium hover:bg-first/90 transition-all shadow-chip';
+        ex1Dom.sendBtn.innerHTML = `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span>Send to Teacher</span>`;
+        ex1Dom.sendStatus.textContent = '';
+
+        loadEx1Card();
+      }
+
+      function loadEx1Card() {
+        const item = ex1.queue[ex1.index];
+        const meta = TYPE_META[item.type];
+        const targetWords = item.hiddenSide === 'if' ? item.ifClause : item.mainClause;
+
+        ex1.answered = false;
+        ex1.hintVisible = false;
+        ex1.placed = [];
+        ex1.tiles = shuffle([...targetWords, ...item.distractors]).map((word, idx) => ({
+          uid: `t_${ex1.index}_${idx}`,
+          word,
+          used: false,
+        }));
+
+        // Progress UI
+        ex1Dom.progressLabel.textContent = `${ex1.index + 1} of ${ex1.queue.length}`;
+        ex1Dom.scoreLive.textContent = `Score: ${ex1.score}`;
+        ex1Dom.progressFill.style.width = `${(ex1.index / ex1.queue.length) * 100}%`;
+
+        ex1Dom.contextLabel.textContent = item.context;
+        ex1Dom.typeBadge.classList.add('hidden');
+        ex1Dom.hintBox.classList.add('hidden');
+        ex1Dom.feedback.classList.add('hidden');
+        ex1Dom.checkBtn.classList.remove('hidden');
+        ex1Dom.nextBtn.classList.add('hidden');
+        ex1Dom.hintToggleBtn.disabled = false;
+
+        // Prepare hint box styling
+        ex1Dom.hintBox.className = `hidden rounded-xl border px-4 py-3 flex flex-wrap items-center gap-2 animate-fade-up ${meta.bg} ${meta.border}`;
+        ex1Dom.hintType.className = `font-mono text-xs font-semibold uppercase ${meta.text}`;
+        ex1Dom.hintType.textContent = meta.name;
+        ex1Dom.hintFormula.textContent = meta.formula;
+
+        renderEx1Workspace();
+      }
+
+      function renderEx1Workspace() {
+        const item = ex1.queue[ex1.index];
+        const placedTiles = ex1.placed.map((uid) => ex1.tiles.find((t) => t.uid === uid));
+
+        // Build drop zone
+        ex1Dom.dropZone.innerHTML = '';
+        const makeFixedSpan = (words, withComma) => {
+          const span = document.createElement('span');
+          span.className = 'inline-flex items-center px-3 py-1.5 rounded-lg bg-surface border border-line text-sm sm:text-base font-medium text-ink';
+          span.textContent = words.join(' ') + (withComma ? ',' : '.');
+          return span;
+        };
+
+        const appendPlacedChips = () => {
+          if (placedTiles.length === 0) {
+            const ph = document.createElement('span');
+            ph.className = 'text-xs sm:text-sm text-muted/80 italic px-2 py-1.5 border border-dashed border-line rounded-lg';
+            ph.textContent = 'Click words below to complete this clause...';
+            ex1Dom.dropZone.appendChild(ph);
+          } else {
+            placedTiles.forEach((tile) => {
+              const btn = document.createElement('button');
+              btn.type = 'button';
+              btn.disabled = ex1.answered;
+              btn.className = [
+                'animate-chip-in px-3 py-1.5 rounded-lg text-sm sm:text-base font-medium border transition-all',
+                ex1.answered
+                  ? 'bg-surface border-line text-ink cursor-default'
+                  : 'bg-ink text-paper border-ink hover:bg-ink/85 shadow-chip cursor-pointer',
+              ].join(' ');
+              btn.textContent = tile.word;
+              btn.addEventListener('click', () => removeEx1Tile(tile.uid));
+              ex1Dom.dropZone.appendChild(btn);
+            });
+          }
+        };
+
+        if (item.hiddenSide === 'main') {
+          ex1Dom.dropZone.appendChild(makeFixedSpan(item.ifClause, true));
+          appendPlacedChips();
+          const dot = document.createElement('span');
+          dot.className = 'font-serif text-lg text-muted font-semibold';
+          dot.textContent = '.';
+          ex1Dom.dropZone.appendChild(dot);
+        } else {
+          appendPlacedChips();
+          const comma = document.createElement('span');
+          comma.className = 'font-serif text-lg text-muted font-semibold';
+          comma.textContent = ',';
+          ex1Dom.dropZone.appendChild(comma);
+          ex1Dom.dropZone.appendChild(makeFixedSpan(item.mainClause, false));
+        }
+
+        // Render word bank
+        ex1Dom.wordBank.innerHTML = '';
+        ex1.tiles.forEach((tile) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.disabled = tile.used || ex1.answered;
+          btn.className = tile.used
+            ? 'px-3.5 py-2 rounded-xl text-sm font-medium border border-dashed border-line bg-paper/40 text-transparent select-none cursor-default'
+            : 'px-3.5 py-2 rounded-xl text-sm font-medium border border-line bg-surface text-ink hover:border-ink/50 hover:bg-paper active:scale-95 transition-all shadow-chip cursor-pointer disabled:opacity-50 disabled:cursor-default';
+          btn.textContent = tile.word;
+          if (!tile.used && !ex1.answered) {
+            btn.addEventListener('click', () => addEx1Tile(tile.uid));
+          }
+          ex1Dom.wordBank.appendChild(btn);
+        });
+
+        // Update buttons
+        const hasPlaced = ex1.placed.length > 0;
+        ex1Dom.undoBtn.disabled = !hasPlaced || ex1.answered;
+        ex1Dom.clearBtn.disabled = !hasPlaced || ex1.answered;
+        ex1Dom.checkBtn.disabled = !hasPlaced || ex1.answered;
+      }
+
+      function addEx1Tile(uid) {
+        if (ex1.answered) return;
+        const tile = ex1.tiles.find((t) => t.uid === uid);
+        if (!tile || tile.used) return;
+        tile.used = true;
+        ex1.placed.push(uid);
+        renderEx1Workspace();
+      }
+
+      function removeEx1Tile(uid) {
+        if (ex1.answered) return;
+        const tile = ex1.tiles.find((t) => t.uid === uid);
+        if (!tile) return;
+        tile.used = false;
+        ex1.placed = ex1.placed.filter((id) => id !== uid);
+        renderEx1Workspace();
+      }
+
+      function checkEx1Answer() {
+        if (ex1.answered || ex1.placed.length === 0) return;
+        const item = ex1.queue[ex1.index];
+        const meta = TYPE_META[item.type];
+        const expectedWords = item.hiddenSide === 'if' ? item.ifClause : item.mainClause;
+        const builtWords = ex1.placed.map((uid) => ex1.tiles.find((t) => t.uid === uid).word);
+        const isCorrect =
+          builtWords.length === expectedWords.length &&
+          builtWords.every((w, i) => w.toLowerCase() === expectedWords[i].toLowerCase());
+
+        ex1.answered = true;
+        if (isCorrect) {
+          ex1.score += 1;
+        } else {
+          ex1.mistakes.push({ item, built: builtWords.join(' ') });
+          ex1Dom.card.classList.add('animate-shake');
+          setTimeout(() => ex1Dom.card.classList.remove('animate-shake'), 360);
+        }
+
+        // Reveal type badge
+        ex1Dom.typeBadge.className = `font-mono text-xs font-medium px-2.5 py-1 rounded-full border ${meta.bg} ${meta.border} ${meta.text}`;
+        ex1Dom.typeBadge.textContent = meta.name;
+        ex1Dom.typeBadge.classList.remove('hidden');
+
+        // Feedback box
+        ex1Dom.feedback.className = isCorrect
+          ? 'rounded-xl border border-emerald-200 bg-emerald-50/80 p-4 sm:p-5 space-y-2.5 animate-fade-up'
+          : 'rounded-xl border border-third-border bg-third-soft p-4 sm:p-5 space-y-2.5 animate-fade-up';
+        ex1Dom.feedbackTitle.className = isCorrect
+          ? 'text-sm font-semibold text-emerald-800'
+          : 'text-sm font-semibold text-third';
+        ex1Dom.feedbackTitle.textContent = isCorrect ? 'Correct!' : 'Not quite — here is the correct sentence:';
+        ex1Dom.feedbackSentence.textContent = item.full;
+        ex1Dom.feedbackNote.textContent = item.note;
+        ex1Dom.feedback.classList.remove('hidden');
+
+        ex1Dom.scoreLive.textContent = `Score: ${ex1.score}`;
+        ex1Dom.progressFill.style.width = `${((ex1.index + 1) / ex1.queue.length) * 100}%`;
+        ex1Dom.checkBtn.classList.add('hidden');
+        ex1Dom.nextBtn.classList.remove('hidden');
+        ex1Dom.nextLabel.textContent = ex1.index === ex1.queue.length - 1 ? 'See Results' : 'Next';
+        ex1Dom.hintToggleBtn.disabled = true;
+
+        renderEx1Workspace();
+      }
+
+      function nextEx1Card() {
+        if (!ex1.answered) return;
+        if (ex1.index < ex1.queue.length - 1) {
+          ex1.index += 1;
+          loadEx1Card();
+        } else {
+          showEx1Summary();
+        }
+      }
+
+      function showEx1Summary() {
+        const total = ex1.queue.length;
+        const pct = Math.round((ex1.score / total) * 100);
+
+        if (!ex1.isPracticeMode) {
+          appState.scores.ex1 = ex1.score;
+          renderTabs();
+        }
+
+        ex1Dom.activeArea.classList.add('hidden');
+        ex1Dom.summaryArea.classList.remove('hidden');
+
+        ex1Dom.summaryScore.textContent = `${ex1.score} / ${total}`;
+        ex1Dom.summaryPct.textContent = `(${pct}%)`;
+        ex1Dom.summaryHeadline.textContent =
+          pct === 100 ? 'Excellent work!' : pct >= 75 ? 'Great job!' : 'Good practice — review the mistakes below';
+
+        if (ex1.mistakes.length === 0) {
+          ex1Dom.perfectMsg.classList.remove('hidden');
+          ex1Dom.mistakesWrap.classList.add('hidden');
+          ex1Dom.practiceMistakesBtn.classList.add('hidden');
+        } else {
+          ex1Dom.perfectMsg.classList.add('hidden');
+          ex1Dom.mistakesWrap.classList.remove('hidden');
+          ex1Dom.practiceMistakesBtn.classList.remove('hidden');
+          ex1Dom.mistakesList.innerHTML = '';
+          ex1.mistakes.forEach(({ item, built }) => {
+            const meta = TYPE_META[item.type];
+            const row = document.createElement('div');
+            row.className = 'py-3 space-y-1';
+            row.innerHTML = `
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-[11px] px-2 py-0.5 rounded-full border ${meta.bg} ${meta.border} ${meta.text}">${meta.short}</span>
+                <span class="text-xs text-muted">Your clause: <span class="text-third line-through">${escapeHtml(built)}</span></span>
+              </div>
+              <p class="font-serif text-base text-ink">${escapeHtml(item.full)}</p>
+            `;
+            ex1Dom.mistakesList.appendChild(row);
+          });
+        }
+      }
+
+      // Exercise 1 event listeners
+      ex1Dom.undoBtn.addEventListener('click', () => {
+        if (ex1.placed.length > 0 && !ex1.answered) {
+          removeEx1Tile(ex1.placed[ex1.placed.length - 1]);
+        }
+      });
+      ex1Dom.clearBtn.addEventListener('click', () => {
+        if (ex1.answered) return;
+        ex1.tiles.forEach((t) => (t.used = false));
+        ex1.placed = [];
+        renderEx1Workspace();
+      });
+      ex1Dom.hintToggleBtn.addEventListener('click', () => {
+        ex1.hintVisible = !ex1.hintVisible;
+        ex1Dom.hintBox.classList.toggle('hidden', !ex1.hintVisible);
+      });
+      ex1Dom.listenTopBtn.addEventListener('click', () => {
+        const item = ex1.queue[ex1.index];
+        if (!item) return;
+        if (ex1.answered) {
+          speakText(item.full);
+        } else {
+          const given = item.hiddenSide === 'if' ? item.mainClause.join(' ') : item.ifClause.join(' ');
+          speakText(given);
+        }
+      });
+      ex1Dom.listenFeedbackBtn.addEventListener('click', () => {
+        const item = ex1.queue[ex1.index];
+        if (item) speakText(item.full);
+      });
+      ex1Dom.checkBtn.addEventListener('click', checkEx1Answer);
+      ex1Dom.nextBtn.addEventListener('click', nextEx1Card);
+      ex1Dom.tryAgainBtn.addEventListener('click', () => startEx1(EX1_DATA, false));
+      ex1Dom.practiceMistakesBtn.addEventListener('click', () => {
+        const wrongItems = ex1.mistakes.map((m) => m.item);
+        if (wrongItems.length > 0) startEx1(wrongItems, true);
+      });
+      ex1Dom.sendBtn.addEventListener('click', () => {
+        const mistakes = ex1.mistakes.map((m) => `#${m.item.id}: wrote "${m.built}" -> Correct: "${m.item.full}"`);
+        sendResultsToTeacher({
+          exerciseTitle: 'Exercise 1: Complete the Clause',
+          score: ex1.score,
+          total: ex1.queue.length,
+          mistakes,
+          buttonEl: ex1Dom.sendBtn,
+          statusEl: ex1Dom.sendStatus,
+        });
+      });
+
+      // Keyboard shortcuts for Exercise 1 (Backspace & Enter)
+      document.addEventListener('keydown', (e) => {
+        if (appState.activeTab !== 'ex1') return;
+        if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (!guideModal.classList.contains('hidden')) {
+          if (e.key === 'Escape') guideModal.classList.add('hidden');
+          return;
+        }
+        if (ex1Dom.activeArea.classList.contains('hidden')) return;
+
+        if (e.key === 'Backspace' && !ex1.answered && ex1.placed.length > 0) {
+          e.preventDefault();
+          removeEx1Tile(ex1.placed[ex1.placed.length - 1]);
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (!ex1.answered && ex1.placed.length > 0) {
+            checkEx1Answer();
+          } else if (ex1.answered) {
+            nextEx1Card();
+          }
+        }
+      });
+
+      /* =========================================================================
+       * 9. EXERCISE 2: MATCH THE HALVES (SET A & SET B)
+       * ========================================================================= */
+      const ex2 = {
+        rightOrders: {},     // { A: [pairObj, ...], B: [...] }
+        selectedLeft: null,  // { setId, id }
+        selectedRight: null, // { setId, id }
+        matches: {},         // { leftId: rightId }
+        checked: false,
+        lastScore: 0,
+        lastMistakes: [],
+      };
+
+      const ex2Dom = {
+        container: document.getElementById('ex2SetsContainer'),
+        scoreDisplay: document.getElementById('ex2ScoreDisplay'),
+        checkBtn: document.getElementById('ex2CheckBtn'),
+        resetBtn: document.getElementById('ex2ResetBtn'),
+        sendBtn: document.getElementById('ex2SendBtn'),
+        sendStatus: document.getElementById('ex2SendStatus'),
+      };
+
+      function initEx2() {
+        ex2.matches = {};
+        ex2.selectedLeft = null;
+        ex2.selectedRight = null;
+        ex2.checked = false;
+        ex2.lastScore = 0;
+        ex2.lastMistakes = [];
+        EX2_SETS.forEach((set) => {
+          // Ensure shuffled right column is not identical to left order
+          let shuffled = shuffle(set.pairs);
+          if (shuffled.every((p, idx) => p.id === set.pairs[idx].id)) {
+            shuffled = shuffled.reverse();
+          }
+          ex2.rightOrders[set.id] = shuffled;
+        });
+        ex2Dom.scoreDisplay.textContent = '0 / 12';
+        ex2Dom.sendStatus.textContent = '';
+        resetSendButtonStyle(ex2Dom.sendBtn);
+        renderEx2();
+      }
+
+      function renderEx2() {
+        ex2Dom.container.innerHTML = '';
+
+        EX2_SETS.forEach((set) => {
+          const card = document.createElement('div');
+          card.className = 'bg-surface border border-line rounded-2xl shadow-editorial p-5 sm:p-6 space-y-4';
+
+          const header = document.createElement('div');
+          header.className = 'flex items-center justify-between border-b border-line pb-3';
+          header.innerHTML = `
+            <h3 class="font-serif text-lg font-medium text-ink">${set.title}</h3>
+            <span class="font-mono text-xs text-muted">${set.subtitle}</span>
+          `;
+          card.appendChild(header);
+
+          const grid = document.createElement('div');
+          grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6';
+
+          // Left Column (If-clauses)
+          const leftCol = document.createElement('div');
+          leftCol.className = 'space-y-2.5';
+          leftCol.innerHTML = `<div class="font-mono text-[11px] uppercase tracking-wider text-muted mb-1">If-Clause</div>`;
+
+          set.pairs.forEach((pair, idxInSet) => {
+            const matchedRightId = ex2.matches[pair.id];
+            const isSelected = ex2.selectedLeft && ex2.selectedLeft.id === pair.id;
+            const isCorrect = ex2.checked && matchedRightId === pair.id;
+            const isWrong = ex2.checked && matchedRightId && matchedRightId !== pair.id;
+
+            let borderBg = 'bg-paper/60 border-line hover:border-ink/40';
+            if (isSelected) borderBg = 'bg-ink text-paper border-ink shadow-chip';
+            else if (isCorrect) borderBg = 'bg-emerald-50 border-emerald-300 text-emerald-950';
+            else if (isWrong) borderBg = 'bg-third-soft border-third-border text-third';
+            else if (matchedRightId) borderBg = 'bg-surface border-ink/35';
+
+            const pillStyle = PAIR_BADGE_STYLES[idxInSet % PAIR_BADGE_STYLES.length];
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `w-full text-left px-3.5 py-3 rounded-xl border text-sm transition-all flex items-start gap-2.5 ${borderBg}`;
+            btn.innerHTML = `
+              <span class="font-mono text-xs font-semibold px-2 py-0.5 rounded-md border shrink-0 mt-0.5 ${isSelected ? 'bg-white/20 text-paper border-white/30' : pillStyle}">#${pair.id}</span>
+              <span class="leading-snug">${escapeHtml(pair.left)}</span>
+            `;
+            btn.addEventListener('click', () => handleEx2LeftClick(set.id, pair.id));
+            leftCol.appendChild(btn);
+          });
+
+          // Right Column (Result clauses)
+          const rightCol = document.createElement('div');
+          rightCol.className = 'space-y-2.5';
+          rightCol.innerHTML = `<div class="font-mono text-[11px] uppercase tracking-wider text-muted mb-1">Result Clause</div>`;
+
+          ex2.rightOrders[set.id].forEach((pair) => {
+            // Find which leftId is matched to this right pair.id
+            const matchedLeftIdStr = Object.keys(ex2.matches).find((lId) => ex2.matches[lId] === pair.id);
+            const matchedLeftId = matchedLeftIdStr ? Number(matchedLeftIdStr) : null;
+            const isSelected = ex2.selectedRight && ex2.selectedRight.id === pair.id;
+            const isCorrect = ex2.checked && matchedLeftId === pair.id;
+            const isWrong = ex2.checked && matchedLeftId !== null && matchedLeftId !== pair.id;
+
+            let borderBg = 'bg-surface border-line hover:border-ink/40';
+            if (isSelected) borderBg = 'bg-ink text-paper border-ink shadow-chip';
+            else if (isCorrect) borderBg = 'bg-emerald-50 border-emerald-300 text-emerald-950';
+            else if (isWrong) borderBg = 'bg-third-soft border-third-border text-third';
+            else if (matchedLeftId !== null) borderBg = 'bg-paper/70 border-ink/35';
+
+            let pillHtml = `<span class="font-mono text-xs text-muted/60 px-2 py-0.5 rounded-md border border-dashed border-line shrink-0 mt-0.5">—</span>`;
+            if (matchedLeftId !== null) {
+              const leftIdx = set.pairs.findIndex((p) => p.id === matchedLeftId);
+              const pillStyle = PAIR_BADGE_STYLES[(leftIdx >= 0 ? leftIdx : 0) % PAIR_BADGE_STYLES.length];
+              pillHtml = `<span class="font-mono text-xs font-semibold px-2 py-0.5 rounded-md border shrink-0 mt-0.5 ${pillStyle}">#${matchedLeftId}</span>`;
+            }
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `w-full text-left px-3.5 py-3 rounded-xl border text-sm transition-all flex items-start gap-2.5 ${borderBg}`;
+            btn.innerHTML = `${pillHtml}<span class="leading-snug">${escapeHtml(pair.right)}</span>`;
+            btn.addEventListener('click', () => handleEx2RightClick(set.id, pair.id));
+            rightCol.appendChild(btn);
+          });
+
+          grid.appendChild(leftCol);
+          grid.appendChild(rightCol);
+          card.appendChild(grid);
+          ex2Dom.container.appendChild(card);
+        });
+      }
+
+      function handleEx2LeftClick(setId, leftId) {
+        ex2.checked = false;
+        // If already matched, unlink it
+        if (ex2.matches[leftId]) {
+          delete ex2.matches[leftId];
+          ex2.selectedLeft = null;
+          ex2.selectedRight = null;
+          renderEx2();
+          return;
+        }
+        // If a right item in the same set is already selected, pair them
+        if (ex2.selectedRight && ex2.selectedRight.setId === setId) {
+          ex2.matches[leftId] = ex2.selectedRight.id;
+          ex2.selectedLeft = null;
+          ex2.selectedRight = null;
+        } else {
+          ex2.selectedLeft = ex2.selectedLeft && ex2.selectedLeft.id === leftId ? null : { setId, id: leftId };
+          ex2.selectedRight = null;
+        }
+        renderEx2();
+      }
+
+      function handleEx2RightClick(setId, rightId) {
+        ex2.checked = false;
+        // If already matched to some leftId, unlink it
+        const existingLeft = Object.keys(ex2.matches).find((lId) => ex2.matches[lId] === rightId);
+        if (existingLeft) {
+          delete ex2.matches[existingLeft];
+          ex2.selectedLeft = null;
+          ex2.selectedRight = null;
+          renderEx2();
+          return;
+        }
+        // If a left item in the same set is selected, pair them
+        if (ex2.selectedLeft && ex2.selectedLeft.setId === setId) {
+          ex2.matches[ex2.selectedLeft.id] = rightId;
+          ex2.selectedLeft = null;
+          ex2.selectedRight = null;
+        } else {
+          ex2.selectedRight = ex2.selectedRight && ex2.selectedRight.id === rightId ? null : { setId, id: rightId };
+          ex2.selectedLeft = null;
+        }
+        renderEx2();
+      }
+
+      function checkEx2() {
+        let score = 0;
+        const mistakes = [];
+        const allPairs = EX2_SETS.flatMap((s) => s.pairs);
+        const byId = Object.fromEntries(allPairs.map((p) => [p.id, p]));
+
+        allPairs.forEach((pair) => {
+          const chosenRightId = ex2.matches[pair.id];
+          if (chosenRightId === pair.id) {
+            score += 1;
+          } else {
+            const chosenText = chosenRightId ? byId[chosenRightId].right : '(not matched)';
+            mistakes.push(`#${pair.id} "${pair.left}" -> chose "${chosenText}" (Correct: "${pair.right}")`);
+          }
+        });
+
+        ex2.checked = true;
+        ex2.lastScore = score;
+        ex2.lastMistakes = mistakes;
+        appState.scores.ex2 = score;
+        ex2Dom.scoreDisplay.textContent = `${score} / 12`;
+        renderEx2();
+        renderTabs();
+      }
+
+      ex2Dom.checkBtn.addEventListener('click', checkEx2);
+      ex2Dom.resetBtn.addEventListener('click', initEx2);
+      ex2Dom.sendBtn.addEventListener('click', () => {
+        if (!ex2.checked) checkEx2();
+        sendResultsToTeacher({
+          exerciseTitle: 'Exercise 2: Match the Halves',
+          score: ex2.lastScore,
+          total: 12,
+          mistakes: ex2.lastMistakes,
+          buttonEl: ex2Dom.sendBtn,
+          statusEl: ex2Dom.sendStatus,
+        });
+      });
+
+      /* =========================================================================
+       * 10. EXERCISE 3: IDENTIFY THE CONDITIONAL TYPE (12 SENTENCES)
+       * ========================================================================= */
+      const ex3 = {
+        selections: {}, // { itemId: 0|1|2|3 }
+        checked: false,
+        lastScore: 0,
+        lastMistakes: [],
+      };
+
+      const ex3Dom = {
+        container: document.getElementById('ex3ListContainer'),
+        scoreDisplay: document.getElementById('ex3ScoreDisplay'),
+        checkBtn: document.getElementById('ex3CheckBtn'),
+        resetBtn: document.getElementById('ex3ResetBtn'),
+        sendBtn: document.getElementById('ex3SendBtn'),
+        sendStatus: document.getElementById('ex3SendStatus'),
+      };
+
+      function initEx3() {
+        ex3.selections = {};
+        ex3.checked = false;
+        ex3.lastScore = 0;
+        ex3.lastMistakes = [];
+        ex3Dom.scoreDisplay.textContent = '0 / 12';
+        ex3Dom.sendStatus.textContent = '';
+        resetSendButtonStyle(ex3Dom.sendBtn);
+        renderEx3();
+      }
+
+      function renderEx3() {
+        ex3Dom.container.innerHTML = '';
+
+        EX3_DATA.forEach((item) => {
+          const chosen = ex3.selections[item.id];
+          const isCorrect = ex3.checked && chosen === item.type;
+          const isWrong = ex3.checked && chosen !== item.type;
+
+          let cardBorder = 'border-line bg-surface';
+          if (isCorrect) cardBorder = 'border-emerald-300 bg-emerald-50/40';
+          else if (isWrong) cardBorder = 'border-third-border bg-third-soft/40';
+
+          const card = document.createElement('div');
+          card.className = `rounded-2xl border shadow-chip p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-3.5 transition-colors ${cardBorder}`;
+
+          const left = document.createElement('div');
+          left.className = 'flex items-start gap-3';
+          left.innerHTML = `
+            <span class="font-mono text-xs text-muted pt-1 shrink-0 w-6">${String(item.id).padStart(2, '0')}.</span>
+            <p class="text-sm sm:text-base text-ink leading-relaxed">${escapeHtml(item.text)}</p>
+          `;
+
+          const pillsWrap = document.createElement('div');
+          pillsWrap.className = 'flex flex-wrap items-center gap-1.5 shrink-0 pl-9 lg:pl-0';
+
+          [0, 1, 2, 3].forEach((t) => {
+            const meta = TYPE_META[t];
+            const isSelected = chosen === t;
+            const btn = document.createElement('button');
+            btn.type = 'button';
+
+            let btnStyle = 'bg-paper border-line text-muted hover:text-ink hover:border-ink/40';
+            if (isSelected) {
+              if (ex3.checked && t !== item.type) {
+                btnStyle = 'bg-third text-white border-third';
+              } else if (ex3.checked && t === item.type) {
+                btnStyle = 'bg-emerald-700 text-white border-emerald-700';
+              } else {
+                btnStyle = meta.activeBg;
+              }
+            }
+
+            btn.className = `px-3 py-1.5 rounded-xl border text-xs font-mono font-medium transition-all cursor-pointer ${btnStyle}`;
+            btn.textContent = meta.short;
+            btn.addEventListener('click', () => {
+              ex3.selections[item.id] = t;
+              // Allow retrying cleanly without losing other items
+              if (ex3.checked) ex3.checked = false;
+              renderEx3();
+            });
+            pillsWrap.appendChild(btn);
+          });
+
+          card.appendChild(left);
+          card.appendChild(pillsWrap);
+          ex3Dom.container.appendChild(card);
+        });
+      }
+
+      function checkEx3() {
+        let score = 0;
+        const mistakes = [];
+
+        EX3_DATA.forEach((item) => {
+          const chosen = ex3.selections[item.id];
+          if (chosen === item.type) {
+            score += 1;
+          } else {
+            const chosenName = chosen !== undefined ? TYPE_META[chosen].short : '(none)';
+            mistakes.push(`#${item.id}: chose ${chosenName} -> Correct: ${TYPE_META[item.type].short}`);
+          }
+        });
+
+        ex3.checked = true;
+        ex3.lastScore = score;
+        ex3.lastMistakes = mistakes;
+        appState.scores.ex3 = score;
+        ex3Dom.scoreDisplay.textContent = `${score} / 12`;
+        renderEx3();
+        renderTabs();
+      }
+
+      ex3Dom.checkBtn.addEventListener('click', checkEx3);
+      ex3Dom.resetBtn.addEventListener('click', initEx3);
+      ex3Dom.sendBtn.addEventListener('click', () => {
+        if (!ex3.checked) checkEx3();
+        sendResultsToTeacher({
+          exerciseTitle: 'Exercise 3: Identify the Conditional Type',
+          score: ex3.lastScore,
+          total: 12,
+          mistakes: ex3.lastMistakes,
+          buttonEl: ex3Dom.sendBtn,
+          statusEl: ex3Dom.sendStatus,
+        });
+      });
+
+      /* =========================================================================
+       * 11. SHARED GAP-FILL BUILDER FOR EXERCISES 4 & 5
+       * ========================================================================= */
+      function createGapExercise({ data, containerEl, scoreDisplayEl, checkBtnEl, resetBtnEl, sendBtnEl, sendStatusEl, tabKey, exerciseTitle, showTypeBadge }) {
+        const state = {
+          checked: false,
+          lastScore: 0,
+          lastMistakes: [],
+        };
+
+        function render() {
+          containerEl.innerHTML = '';
+          data.forEach((item) => {
+            const row = document.createElement('div');
+            row.className = 'p-4 sm:p-5 flex flex-col gap-2';
+
+            const topLine = document.createElement('div');
+            topLine.className = 'flex items-start gap-3';
+
+            const num = document.createElement('span');
+            num.className = 'font-mono text-xs text-muted pt-1.5 shrink-0 w-6';
+            num.textContent = `${String(item.id).padStart(2, '0')}.`;
+            topLine.appendChild(num);
+
+            const contentWrap = document.createElement('div');
+            contentWrap.className = 'flex-1 space-y-2';
+
+            if (showTypeBadge) {
+              const meta = TYPE_META[item.type];
+              const badge = document.createElement('span');
+              badge.className = `inline-block font-mono text-[11px] font-medium px-2.5 py-0.5 rounded-full border ${meta.bg} ${meta.border} ${meta.text}`;
+              badge.textContent = meta.name;
+              contentWrap.appendChild(badge);
+            }
+
+            const sentenceP = document.createElement('p');
+            sentenceP.className = 'text-sm sm:text-base text-ink leading-loose flex flex-wrap items-center gap-x-1.5 gap-y-2';
+
+            let gapIdx = 0;
+            item.segments.forEach((seg) => {
+              if (typeof seg === 'string') {
+                const span = document.createElement('span');
+                span.textContent = seg;
+                sentenceP.appendChild(span);
+              } else {
+                const currentGapIdx = gapIdx++;
+                const wrap = document.createElement('span');
+                wrap.className = 'inline-flex items-center gap-1.5';
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.autocomplete = 'off';
+                input.spellcheck = false;
+                input.dataset.itemId = String(item.id);
+                input.dataset.gapIdx = String(currentGapIdx);
+                input.className = 'gap-input';
+                input.setAttribute('aria-label', `Sentence ${item.id}, verb ${seg.cue}`);
+                input.addEventListener('input', () => {
+                  input.classList.remove('state-correct', 'state-wrong');
+                });
+
+                const cue = document.createElement('span');
+                cue.className = 'font-mono text-xs text-muted';
+                cue.textContent = `(${seg.cue})`;
+
+                wrap.appendChild(input);
+                wrap.appendChild(cue);
+                sentenceP.appendChild(wrap);
+              }
+            });
+
+            contentWrap.appendChild(sentenceP);
+            topLine.appendChild(contentWrap);
+            row.appendChild(topLine);
+            containerEl.appendChild(row);
+          });
+        }
+
+        function check() {
+          let score = 0;
+          const mistakes = [];
+
+          data.forEach((item) => {
+            const gaps = item.segments.filter((s) => typeof s === 'object');
+            let allCorrect = true;
+            const wrongDetails = [];
+
+            gaps.forEach((gap, gIdx) => {
+              const input = containerEl.querySelector(`input[data-item-id="${item.id}"][data-gap-idx="${gIdx}"]`);
+              const userVal = input ? input.value : '';
+              const ok = isAnswerMatch(userVal, gap.answers);
+
+              if (input) {
+                input.classList.remove('state-correct', 'state-wrong');
+                input.classList.add(ok ? 'state-correct' : 'state-wrong');
+              }
+
+              if (!ok) {
+                allCorrect = false;
+                wrongDetails.push(`(${gap.cue}): "${userVal.trim() || 'blank'}" -> ${gap.answers[0]}`);
+              }
+            });
+
+            if (allCorrect) {
+              score += 1;
+            } else {
+              mistakes.push(`#${item.id}: ${wrongDetails.join('; ')}`);
+            }
+          });
+
+          state.checked = true;
+          state.lastScore = score;
+          state.lastMistakes = mistakes;
+          appState.scores[tabKey] = score;
+          scoreDisplayEl.textContent = `${score} / ${data.length}`;
+          renderTabs();
+        }
+
+        function reset() {
+          state.checked = false;
+          state.lastScore = 0;
+          state.lastMistakes = [];
+          containerEl.querySelectorAll('input.gap-input').forEach((inp) => {
+            inp.value = '';
+            inp.classList.remove('state-correct', 'state-wrong');
+          });
+          scoreDisplayEl.textContent = `0 / ${data.length}`;
+          sendStatusEl.textContent = '';
+          resetSendButtonStyle(sendBtnEl);
+        }
+
+        checkBtnEl.addEventListener('click', check);
+        resetBtnEl.addEventListener('click', reset);
+        sendBtnEl.addEventListener('click', () => {
+          check();
+          sendResultsToTeacher({
+            exerciseTitle,
+            score: state.lastScore,
+            total: data.length,
+            mistakes: state.lastMistakes,
+            buttonEl: sendBtnEl,
+            statusEl: sendStatusEl,
+          });
+        });
+
+        render();
+      }
+
+      function resetSendButtonStyle(btn) {
+        btn.disabled = false;
+        btn.className = 'inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-first text-white text-sm font-medium hover:bg-first/90 transition-all shadow-chip';
+        btn.innerHTML = `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span>Send to Teacher</span>`;
+      }
+
+      /* =========================================================================
+       * 12. INITIALIZE APPLICATION
+       * ========================================================================= */
+      renderGrammarGuide();
+      renderTabs();
+      startEx1(EX1_DATA, false);
+      initEx2();
+      initEx3();
+
+      createGapExercise({
+        data: EX4_DATA,
+        containerEl: document.getElementById('ex4ListContainer'),
+        scoreDisplayEl: document.getElementById('ex4ScoreDisplay'),
+        checkBtnEl: document.getElementById('ex4CheckBtn'),
+        resetBtnEl: document.getElementById('ex4ResetBtn'),
+        sendBtnEl: document.getElementById('ex4SendBtn'),
+        sendStatusEl: document.getElementById('ex4SendStatus'),
+        tabKey: 'ex4',
+        exerciseTitle: 'Exercise 4: Fill in the Verb (One Gap)',
+        showTypeBadge: false,
+      });
+
+      createGapExercise({
+        data: EX5_DATA,
+        containerEl: document.getElementById('ex5ListContainer'),
+        scoreDisplayEl: document.getElementById('ex5ScoreDisplay'),
+        checkBtnEl: document.getElementById('ex5CheckBtn'),
+        resetBtnEl: document.getElementById('ex5ResetBtn'),
+        sendBtnEl: document.getElementById('ex5SendBtn'),
+        sendStatusEl: document.getElementById('ex5SendStatus'),
+        tabKey: 'ex5',
+        exerciseTitle: 'Exercise 5: Fill in the Verbs (Both Clauses)',
+        showTypeBadge: true,
+      });
+    })();
+  </script>
+</body>
+</html>
